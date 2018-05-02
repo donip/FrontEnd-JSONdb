@@ -3,18 +3,106 @@
   <h1>
     Welcome to {{ title }}!
   </h1>
-  <img width="300" alt="Angular Logo" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNTAgMjUwIj4KICAgIDxwYXRoIGZpbGw9IiNERDAwMzEiIGQ9Ik0xMjUgMzBMMzEuOSA2My4ybDE0LjIgMTIzLjFMMTI1IDIzMGw3OC45LTQzLjcgMTQuMi0xMjMuMXoiIC8+CiAgICA8cGF0aCBmaWxsPSIjQzMwMDJGIiBkPSJNMTI1IDMwdjIyLjItLjFWMjMwbDc4LjktNDMuNyAxNC4yLTEyMy4xTDEyNSAzMHoiIC8+CiAgICA8cGF0aCAgZmlsbD0iI0ZGRkZGRiIgZD0iTTEyNSA1Mi4xTDY2LjggMTgyLjZoMjEuN2wxMS43LTI5LjJoNDkuNGwxMS43IDI5LjJIMTgzTDEyNSA1Mi4xem0xNyA4My4zaC0zNGwxNy00MC45IDE3IDQwLjl6IiAvPgogIDwvc3ZnPg==">
+  <img width="150" alt="Angular Logo" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNTAgMjUwIj4KICAgIDxwYXRoIGZpbGw9IiNERDAwMzEiIGQ9Ik0xMjUgMzBMMzEuOSA2My4ybDE0LjIgMTIzLjFMMTI1IDIzMGw3OC45LTQzLjcgMTQuMi0xMjMuMXoiIC8+CiAgICA8cGF0aCBmaWxsPSIjQzMwMDJGIiBkPSJNMTI1IDMwdjIyLjItLjFWMjMwbDc4LjktNDMuNyAxNC4yLTEyMy4xTDEyNSAzMHoiIC8+CiAgICA8cGF0aCAgZmlsbD0iI0ZGRkZGRiIgZD0iTTEyNSA1Mi4xTDY2LjggMTgyLjZoMjEuN2wxMS43LTI5LjJoNDkuNGwxMS43IDI5LjJIMTgzTDEyNSA1Mi4xem0xNyA4My4zaC0zNGwxNy00MC45IDE3IDQwLjl6IiAvPgogIDwvc3ZnPg==">
 </div>
-<h2>Here are some links to help you start: </h2>
-<ul>
-  <li>
-    <h2><a target="_blank" rel="noopener" href="https://angular.io/tutorial">Tour of Heroes</a></h2>
-  </li>
-  <li>
-    <h2><a target="_blank" rel="noopener" href="https://github.com/angular/angular-cli/wiki">CLI Documentation</a></h2>
-  </li>
-  <li>
-    <h2><a target="_blank" rel="noopener" href="https://blog.angular.io/">Angular blog</a></h2>
-  </li>
-</ul>
+<mat-form-field>
+  <mat-select name="select" id="select" [(ngModel)]="selectValue">
+    <mat-option value="none">Choose</mat-option>
+    <mat-option value="cars">Autók</mat-option>
+    <mat-option value="drivers">Sofőrök</mat-option>
+    <mat-option value="table">TableView (beta)</mat-option>
+  </mat-select>
+</mat-form-field>
+<div *ngIf="selectValue === 'table'">
+<app-tableview>
+  </app-tableview>
+</div>
+<div *ngIf="selectValue === 'cars'" class="div-new-car">
+    <i class="fas fa-plus fa-2x"></i>
+    <i class="fas fa-car fa-2x"></i>
+  <form action="" class="form-new-car">
+    <mat-form-field>
+      <input matInput name="manufacturer" placeholder="Gyártó" [(ngModel)]="carData.manufacturer" required>
+      <mat-error>Gyártó megadása kötelező</mat-error>
+    </mat-form-field>
+    <mat-form-field>
+      <input matInput name="type" placeholder="Típus" [(ngModel)]="carData.type" required>
+      <mat-error>Típus megadása kötelező</mat-error>
+    </mat-form-field>
+    <mat-form-field>
+      <input matInput name="year" placeholder="Évjárat" [(ngModel)]="carData.year">
+    </mat-form-field>
+    <mat-form-field>
+      <input matInput name="fuel" placeholder="Üzemanyag" [(ngModel)]="carData.fuel">
+    </mat-form-field>
+    <mat-form-field>
+      <input matInput name="color" placeholder="Szín" [(ngModel)]="carData.color" required>
+      <mat-error>Szín megadása kötelező</mat-error>
+    </mat-form-field>
+    <mat-form-field>
+      <input matInput name="reg" placeholder="Rendszám" pattern="^[a-zA-Z]{3}[0-9]{3}" required [(ngModel)]="carData.reg">
+      <mat-error>Helytelen rendszám! [ABC123]</mat-error>
+    </mat-form-field>
+    <button mat-raised-button (click)="createCar()">Hozzáadás</button>
+  </form>
+</div>
+<div *ngIf="selectValue === 'no'">
+  <table>
+    <tr *ngFor="let car of carsData">
+      <td>{{car.manufacturer}}</td>
+      <td>{{car.type}}</td>
+      <td>{{car.year}}</td>
+      <td>{{car.fuel}}</td>
+      <td>{{car.color}}</td>
+      <td>{{car.reg}}</td>
+      <td>
+        <button (click)="delete(car._id, 'car')">Delete</button>
+      </td>
+    </tr>
+  </table>
 
+</div>
+
+<div *ngIf="selectValue === 'cars'" class="div-cartable-form">
+  <form action="" *ngFor="let car of carsData">
+    <mat-form-field>
+      <input matInput name="manufacturer" placeholder="Gyártó" [(ngModel)]="car.manufacturer">
+    </mat-form-field>
+    <mat-form-field>
+      <input matInput name="type" placeholder="Típus" [(ngModel)]="car.type">
+    </mat-form-field>
+    <mat-form-field>
+      <input matInput name="year" placeholder="Évjárat" [(ngModel)]="car.year">
+    </mat-form-field>
+    <mat-form-field>
+      <input matInput name="fuel" placeholder="Üzemanyag" [(ngModel)]="car.fuel">
+    </mat-form-field>
+    <mat-form-field>
+      <input matInput name="color" placeholder="Szín" [(ngModel)]="car.color">
+    </mat-form-field>
+    <mat-form-field>
+      <input matInput name="reg" placeholder="Rendszám" [(ngModel)]="car.reg">
+    </mat-form-field>
+    <button mat-raised-button (click)="updateCar(car, 'car')"><i class="fas fa-save"></i></button>
+    <button mat-raised-button (click)="delete(car._id, 'car')"><i class="fas fa-trash"></i></button>
+  </form>
+</div>
+
+<div *ngIf="selectValue === 'drivers'" class="div-new-user">
+  <form action="">
+    <mat-form-field>
+      <input matInput name="name" placeholder="Név" [(ngModel)]="driverData.name" minlength="2" required>
+    </mat-form-field>
+    <mat-form-field>
+      <input matInput name="email" placeholder="Email" [(ngModel)]="driverData.email" email required>
+    </mat-form-field>
+    <mat-form-field>
+      <input matInput name="address" placeholder="Cím" [(ngModel)]="driverData.address" minlength="2">
+    </mat-form-field>
+    <mat-form-field>
+      <input matInput name="job" placeholder="Beosztás" [(ngModel)]="driverData.job">
+    </mat-form-field>
+    <br>
+    <button mat-raised-button (click)="createUser()">Mentés</button>
+    </form>
+</div>
